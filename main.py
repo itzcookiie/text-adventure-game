@@ -1,4 +1,5 @@
 import keyboard
+import os
 
 room_mappings = {
     0: {
@@ -37,39 +38,61 @@ class User(object):
         self.rooms_cleared = []
 
 
-def get_battle_choice(room_number):
+def clear():
+    os.system('cls')
+
+
+def get_battle_choice(user, room_number):
+    print("An enemy has appeared!")
+    print("1) Fight")
+    print("2) Flee")
     battle_choice = input("\n")
+    clear()
     if int(battle_choice) == 1:
         print(f"""{room_mappings[room_number].get("temptation")}\n""")
         for i, room_mapping in room_mappings.items():
-            print(f"""{i+1}) {room_mapping.get("verse")}""")
+            print(f"""{i + 1}) {room_mapping.get("verse")}""")
         verse_answer = input("")
-        if room_mappings[int(verse_answer)-1].get("verse") == room_mappings[room_number].get("verse"):
+        clear()
+        user_verse = room_mappings[int(verse_answer) - 1].get("verse")
+        if user_verse == room_mappings[room_number].get("verse"):
             user.rooms_cleared.append(room_number)
-            print("You defeated the enemy!")
-            input("Press enter to continue")
-            return
+            user.exp += 100
+            print("You defeated the enemy and gained 100 exp!")
+            input("Press enter to return back to the main room")
+        else:
+            print("That verse had no effect")
+            print("You was not able to clear the room")
+            input("Press enter to return back to the main room")
+        clear()
 
-def ask_next_room(user_input):
-    return input("What room would you like to enter?\nRoom 0 [0]\nRoom 1 [1]\nRoom 2 [2]\nRoom 3 [3]")
 
-
-rooms = {i: Room(i, room_mappings[i].get("temptation")) for i in range(4)}
-username = input("Welcome to the arena! Enter a username: ")
-user = User(username)
-while True:
-    print(f"There are currently {len(rooms) - len(user.rooms_cleared)} rooms for you to enter")
-    for roomNumber, room in rooms.items():
-        if roomNumber not in user.rooms_cleared:
+def game_loop():
+    rooms = {i: Room(i, room_mappings[i].get("temptation")) for i in range(4)}
+    username = input("Welcome to the arena! Enter a username: ")
+    user = User(username)
+    clear()
+    while True:
+        rooms_left = len(rooms) - len(user.rooms_cleared)
+        if not rooms_left:
+            print(f"Congratuations {user.username}! You have cleared all the rooms!")
+            print("You are a world class warrior!")
+            print(f"You finished with {user.exp} exp!")
+            print("Press esc to quit game")
+            keyboard.wait('esc')
+            break
+        print(f"There are currently {len(rooms) - len(user.rooms_cleared)} rooms for you to enter")
+        open_rooms = [roomNumber for roomNumber in rooms if roomNumber not in user.rooms_cleared]
+        for roomNumber in open_rooms:
             print(f"""Room {roomNumber} - To enter go {room_mappings.get(roomNumber).get("direction").upper()}""")
-    current_room_number = None
-    direction = keyboard.read_key()
-    if direction == "up":
-        current_room_number = 0
-        print("An enemy has appeared!")
-        print("What will you do?")
-        print("1) Fight")
-        print("2) Flee")
-        get_battle_choice(current_room_number)
+        directions = [room_mappings[room_number].get("direction") for room_number in open_rooms]
+        direction = keyboard.read_key()
+        while direction not in directions:
+            direction = keyboard.read_key()
+        clear()
+        current_room_number = [room_number for room_number in open_rooms if
+                               direction == room_mappings[room_number].get("direction")].pop()
+        get_battle_choice(user, current_room_number)
 
 
+game_loop()
