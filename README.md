@@ -6,14 +6,14 @@
 
     Make sure you have Python 3 installed!
 
-How to run game:
+#### How to run game:
 
 - Create your own env by doing `python3 -m venv env` and activate it
 - Install packages by doing `python -m pip install -r requirements.txt`
 - Run the app using `python -m main.py`
   
 
-How game works:
+#### How game works:
 - Will be prompted to enter your username
 - After entering username, you will have the option to enter 4 different room numbers: 1 - 4
 - Use the arrow keys to access a room
@@ -25,7 +25,7 @@ How game works:
 - Gain exp after clearing each room
 - Clear all 4 rooms to win!
 
-Future ideas:
+#### Future ideas:
 - Add more rooms
 - Add an inventory system, so user can e.g. pick up more bible verses (imagine having sheets of pages of the bible in your backpack, like collecting the bible)
 - Use newly picked up bible verses to unlock clear more room
