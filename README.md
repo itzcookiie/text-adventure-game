@@ -4,6 +4,8 @@
 
 ### Lil text adventure game based off the bible. Enter 4 rooms and fight against the enemy using the Word of God!
 
+    Make sure you have Python 3 installed!
+
 How to run game:
 
 - Create your own env by doing `python3 -m venv env` and activate it
